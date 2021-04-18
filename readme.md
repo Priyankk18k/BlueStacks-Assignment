@@ -17,5 +17,7 @@ To build a Role Based Access Control. It is command line Application.
 
 # How to Run. 
 
+There are no Dependencies and no framework Used. Everything is Command Line based
+
 Run using ```python3 main.py```
 
