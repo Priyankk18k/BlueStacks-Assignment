@@ -1,0 +1,1 @@
+{"ravi": {"role": "admin", "resource": ["Actual Resource"], "action_type": ["read", "write", "update", "delete"]}, "priyank": {"role": "user", "resource": ["Actual Resource new"], "action_type": ["read", "write", "update", "delete"]}, "priyank_user": {"role": "user", "resource": ["Actual Resource new user"], "action_type": ["read"]}}
