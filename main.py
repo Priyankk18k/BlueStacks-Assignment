@@ -10,6 +10,7 @@ class Admin:
     def read_json_file(self):
         with open('user_data.txt') as json_file:
             data = json.load(json_file)
+            print(data)
             return data
 
     def create_new_user(self, main_user_name):
@@ -29,6 +30,7 @@ class Admin:
         if role == 'user':
             self.user_dict[user_name] = {'role': role, 'resource': [resource], 'action_type': ['read']}
             print("User Added")
+            self.main(main_user_name)
         elif role == 'admin':
             self.user_dict[user_name] = {'role': role, 'resource': [resource],
                                          'action_type': ['read', 'update', 'delete', 'write']}
@@ -44,10 +46,12 @@ class Admin:
             print("Current role is:-", self.user_dict[user_name]['role'])
             new_role = input("Enter the New role. Ex: User/admin").lower()
             if new_role in role_list:
-                if self.user_dict.get(user_name + "_user"):
+                if self.user_dict.get(new_role + "_user"):
                     print("User Already Exists.")
+                    self.main(main_user_name)
                 elif new_role != self.user_dict[user_name]['role']:
                     self.user_dict[user_name]['role'] = new_role
+                    self.main(main_user_name)
 
     def login_as_another_user(self, main_user_name):
         user_name = input("Enter the Existing User name:-")
@@ -58,16 +62,20 @@ class Admin:
                     # Here we can Also Log Everyone out and rerun the code Again.
                     print("\n")
                     print("User Does not Exist. Create New User, You are now loggin in as Admin name Priyank")
-                    self.main(main_user_name)
+                    self.user_details(main_user_name)
                 else:
                     user_name = user_name + "_user"
                     self.user_details(user_name)
             elif user_role == 'admin':
                 self.main(user_name=user_name)
         else:
-            print("User Does Not Exists. To Create User Press 2")
-            time.sleep(3)
-            self.main(user_name=main_user_name)
+            print("User Does Not Exists. To Create User Login as an Admin")
+            try:
+              user = main_user_name.split("_")[-1]
+              self.user_details(main_user_name)
+            except:
+              time.sleep(3)
+              self.main(user_name=main_user_name)
 
     def access_resource(self, user_name):
         resource = self.user_dict[user_name]['resource']
@@ -92,6 +100,7 @@ class Admin:
             print("You are only Authorized to view the resource")
 
     def outjson(self):
+        print("runnnn")
         with open("user_data.txt", 'w') as f:
             json.dump(self.user_dict, f)
 
@@ -113,17 +122,12 @@ class Admin:
         elif entry == 2:
             self.create_new_user(user_name)
             self.outjson()
-            self.read_json_file()
-            self.main(user_name)
         elif entry == 3:
             self.edit_role(user_name)
             self.outjson()
-            self.read_json_file()
-            self.main(user_name)
         elif entry == 4:
             self.access_resource(user_name)
             self.outjson()
-            self.read_json_file()
             self.main(user_name)
         else:
             print("Please Enter a Valid Input")
@@ -142,7 +146,7 @@ class User(Admin):
 
     def user_option(self, user_input, user_name):
         if user_input == 1:
-            self.login_as_another_user()
+            self.login_as_another_user(user_name)
         elif user_input == 2:
             roles = self.user_dict[user_name]['role']
             print("Roles are", roles)
